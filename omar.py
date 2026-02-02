@@ -39,7 +39,7 @@ ACTIVITY_DATA = {
     },
     "Arts and crafts workshop (Age 4+)": {
         "name": "Arts & Crafts Workshop",
-        "image": "https://images.pexels.com/photos/7869800/pexels-photo-7869800.jpeg?auto=compress&cs=tinysrgb&w=1000",
+        "image": "https://images.pexels.com/photos/7025515/pexels-photo-7025515.jpeg?auto=compress&cs=tinysrgb&w=1000",
         "description": "Unleash creativity with guided workshops tailored for young artists.",
         "time": "2:00 PM to 4:00 PM"
     },
@@ -69,7 +69,7 @@ ACTIVITY_DATA = {
     },
     "Healthy cooking demo for families": {
         "name": "Healthy Family Cooking Demo",
-        "image": "https://images.pexels.com/photos/5082870/pexels-photo-5082870.jpeg?auto=compress&cs=tinysrgb&w=1000",
+        "image": "https://images.pexels.com/photos/5593699/pexels-photo-5593699.jpeg?auto=compress&cs=tinysrgb&w=1000",
         "description": "Learn to prepare nutritious and delicious meals as a family.",
         "time": "3:00 PM to 5:00 PM"
     },
@@ -81,7 +81,7 @@ ACTIVITY_DATA = {
     },
     "Storytelling evening for kids": {
         "name": "Storytelling Evening",
-        "image": "https://images.pexels.com/photos/8613089/pexels-photo-8613089.jpeg?auto=compress&cs=tinysrgb&w=1000",
+        "image": "https://images.pexels.com/photos/8242510/pexels-photo-8242510.jpeg?auto=compress&cs=tinysrgb&w=1000",
         "description": "Enchanting tales under the stars for our little dreamers.",
         "time": "6:30 PM to 8:00 PM"
     }
