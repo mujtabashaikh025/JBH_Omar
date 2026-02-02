@@ -200,11 +200,11 @@ def get_mentioned_activities(text):
             mentioned.append(activity_key)
     return mentioned
 
-def generate_whatsapp_link(bot_number, activity_name):
-    clean_number = bot_number.replace("whatsapp:", "")
-    text_payload = f"Book: {activity_name}"
-    encoded_text = urllib.parse.quote(text_payload)
-    return f"https://wa.me/{clean_number}?text={encoded_text}"
+# def generate_whatsapp_link(bot_number, activity_name):
+#     clean_number = bot_number.replace("whatsapp:", "")
+#     text_payload = f"Book: {activity_name}"
+#     encoded_text = urllib.parse.quote(text_payload)
+#     return f"https://wa.me/{clean_number}?text={encoded_text}"
 
 def send_card(to_number, bot_number, activity_key):
     data = ACTIVITY_DATA.get(activity_key)
@@ -212,13 +212,12 @@ def send_card(to_number, bot_number, activity_key):
         print(f"Warning: Key '{activity_key}' not found.")
         return
 
-    booking_link = generate_whatsapp_link(bot_number, data['name'])
+    # booking_link = generate_whatsapp_link(bot_number, data['name'])
 
     caption = (
         f"*{data['name']}*\n"
         f"{data['description']}\n\n"
         f"🕒 *Time:* {data['time']}\n"
-        # f"🔗 *Book Now:* {booking_link}"
     )
     
     client.messages.create(
