@@ -227,7 +227,7 @@ def send_card(to_number, bot_number, activity_key):
         body=caption,
         media_url=[data['image']]
     )
-    time.sleep(1.2)
+    time.sleep(0.9)
 
 # =========================================================
 # 📩 WHATSAPP WEBHOOK
