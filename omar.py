@@ -1,7 +1,7 @@
 import os
 import time
 import urllib.parse
-from flask import Flask, request
+from flask import Flask, request, send_from_directory
 from twilio.twiml.messaging_response import MessagingResponse
 from twilio.rest import Client
 import google.generativeai as genai
@@ -25,63 +25,63 @@ client = Client(twilio_sid, twilio_token)
 # 🌟 ACTIVITY DATA (With High-Quality Images)
 # =========================================================
 ACTIVITY_DATA = {
-    "Kids swimming and water play sessions": {
+    "Kids Swimming & Water Play": {
         "name": "Kids Swimming & Water Play",
-        "image": "https://images.pexels.com/photos/12616003/pexels-photo-12616003.jpeg?auto=compress&cs=tinysrgb&w=1000",
+        "image": "activity/kids_swimming.jpg",
         "description": "Engaging water activities and supervised play for our younger guests.",
         "time": "9:00 AM to 12:00 PM"
     },
-    "Family yoga or beginner wellness class": {
+    "Family Yoga & Wellness": {
         "name": "Family Yoga & Wellness",
-        "image": "https://images.pexels.com/photos/3094230/pexels-photo-3094230.jpeg?auto=compress&cs=tinysrgb&w=1000",
+        "image": "activity/family_yoga.jpg",
         "description": "A harmonious session for the whole family to find balance and vitality.",
         "time": "10:00 AM to 11:00 AM"
     },
-    "Arts and crafts workshop (Age 4+)": {
+    "Arts & Crafts Workshop": {
         "name": "Arts & Crafts Workshop",
-        "image": "https://images.pexels.com/photos/7025515/pexels-photo-7025515.jpeg?auto=compress&cs=tinysrgb&w=1000",
+        "image": "activity/art_craft.jpg",
         "description": "Unleash creativity with guided workshops tailored for young artists.",
         "time": "2:00 PM to 4:00 PM"
     },
-    "Junior fun movement class": {
+    "Junior Fun Movement": {
         "name": "Junior Fun Movement",
-        "image": "https://images.pexels.com/photos/8613368/pexels-photo-8613368.jpeg?auto=compress&cs=tinysrgb&w=1000",
+        "image": "activity/kids_movement.jpeg",
         "description": "An energetic session designed to keep children active and entertained.",
         "time": "9:00 AM to 10:00 AM"
     },
-    "Parent relaxation spa session": {
+    "Parent Relaxation Spa": {
         "name": "Parent Relaxation Spa",
-        "image": "https://images.pexels.com/photos/5240677/pexels-photo-5240677.jpeg?auto=compress&cs=tinysrgb&w=1000",
+        "image": "activity/parents_relaxation.jpg",
         "description": "A tranquil escape for parents to rejuvenate in our world-class spa.",
         "time": "11:00 AM to 7:00 PM"
     },
-    "Family indoor games zone": {
+    "Family Indoor Games Zone": {
         "name": "Family Indoor Games Zone",
-        "image": "https://images.pexels.com/photos/8205374/pexels-photo-8205374.jpeg?auto=compress&cs=tinysrgb&w=1000",
+        "image": "activity/indoor_games.jpeg",
         "description": "Enjoy quality family time with a variety of engaging indoor games.",
         "time": "12:00 PM to 6:00 PM"
     },
-    "Guided family meditation": {
+    "Guided Family Meditation": {
         "name": "Guided Family Meditation",
-        "image": "https://images.pexels.com/photos/4056535/pexels-photo-4056535.jpeg?auto=compress&cs=tinysrgb&w=1000",
+        "image": "activity/meditation.jpeg",
         "description": "A serene guided journey to cultivate peace and togetherness.",
         "time": "5:00 PM to 6:00 PM"
     },
-    "Healthy cooking demo for families": {
+    "Healthy Family Cooking Demo": {
         "name": "Healthy Family Cooking Demo",
-        "image": "https://images.pexels.com/photos/5593699/pexels-photo-5593699.jpeg?auto=compress&cs=tinysrgb&w=1000",
+        "image": "activity/healthy_cooking.jpg",
         "description": "Learn to prepare nutritious and delicious meals as a family.",
         "time": "3:00 PM to 5:00 PM"
     },
-    "Outdoor family sports": {
+    "Outdoor Family Sports": {
         "name": "Outdoor Family Sports",
-        "image": "https://images.pexels.com/photos/9207306/pexels-photo-9207306.jpeg?auto=compress&cs=tinysrgb&w=1000",
+        "image": "activity/Sports.jpeg",
         "description": "Active outdoor fun for the whole family in our exquisite facilities.",
         "time": "4:00 PM to 6:00 PM"
     },
-    "Storytelling evening for kids": {
+    "Storytelling Evening": {
         "name": "Storytelling Evening",
-        "image": "https://images.pexels.com/photos/8242510/pexels-photo-8242510.jpeg?auto=compress&cs=tinysrgb&w=1000",
+        "image": "activity/story_telling.jpg",
         "description": "Enchanting tales under the stars for our little dreamers.",
         "time": "6:30 PM to 8:00 PM"
     }
@@ -138,16 +138,16 @@ Based on his answer, suggest exactly three options from the Leisure Collection b
 **Formatting Rule:** Do not use bullet points or symbols. Speak with effortless sophistication.
 
 **The Leisure Collection:**
-- Kids swimming and water play sessions – Available from 9:00 AM to 12:00 PM
-- Family yoga or beginner wellness class – Available from 10:00 AM to 11:00 AM
-- Arts and crafts workshop (Age 4+) – Available from 2:00 PM to 4:00 PM
-- Junior fun movement class – Available from 9:00 AM to 10:00 AM
-- Parent relaxation spa session – Available from 11:00 AM to 7:00 PM
-- Family indoor games zone – Available from 12:00 PM to 6:00 PM
-- Guided family meditation – Available from 5:00 PM to 6:00 PM
-- Healthy cooking demo for families – Available from 3:00 PM to 5:00 PM
-- Outdoor family sports – Available from 4:00 PM to 6:00 PM
-- Storytelling evening for kids – Available from 6:30 PM to 8:00 PM
+- Kids Swimming & Water Play – Available from 9:00 AM to 12:00 PM
+- Family Yoga & Wellness – Available from 10:00 AM to 11:00 AM
+- Arts & Crafts Workshop – Available from 2:00 PM to 4:00 PM
+- Junior Fun Movement – Available from 9:00 AM to 10:00 AM
+- Parent Relaxation Spa – Available from 11:00 AM to 7:00 PM
+- Family Indoor Games Zone – Available from 12:00 PM to 6:00 PM
+- Guided Family Meditation – Available from 5:00 PM to 6:00 PM
+- Healthy Family Cooking Demo – Available from 3:00 PM to 5:00 PM
+- Outdoor Family Sports – Available from 4:00 PM to 6:00 PM
+- Storytelling Evening – Available from 6:30 PM to 8:00 PM
 
 ### PHASE 4: THE SCHEDULING NUANCE
 Do not confirm immediately. Request the preferred timing within the operating hours.
@@ -186,25 +186,25 @@ def get_chat_session(sender_id):
 # =========================================================
 def detect_scenario(text):
     # This function is now simplified to detect if any activity is mentioned to trigger cards
-    text = text.lower()
+    text = text.lower().replace("and", "&")
     for activity_key in ACTIVITY_DATA:
-        if activity_key.lower() in text:
+        if activity_key.lower().replace("and", "&") in text:
             return "ACTIVITY_MENTIONED"
     return None
 
 def get_mentioned_activities(text):
-    text = text.lower()
+    text = text.lower().replace("and", "&")
     mentioned = []
     for activity_key in ACTIVITY_DATA:
-        if activity_key.lower() in text:
+        if activity_key.lower().replace("and", "&") in text:
             mentioned.append(activity_key)
     return mentioned
 
-# def generate_whatsapp_link(bot_number, activity_name):
-#     clean_number = bot_number.replace("whatsapp:", "")
-#     text_payload = f"Book: {activity_name}"
-#     encoded_text = urllib.parse.quote(text_payload)
-#     return f"https://wa.me/{clean_number}?text={encoded_text}"
+def generate_whatsapp_link(bot_number, activity_name):
+    clean_number = bot_number.replace("whatsapp:", "")
+    text_payload = f"Book: {activity_name}"
+    encoded_text = urllib.parse.quote(text_payload)
+    return f"https://wa.me/{clean_number}?text={encoded_text}"
 
 def send_card(to_number, bot_number, activity_key):
     data = ACTIVITY_DATA.get(activity_key)
@@ -212,21 +212,33 @@ def send_card(to_number, bot_number, activity_key):
         print(f"Warning: Key '{activity_key}' not found.")
         return
 
-    # booking_link = generate_whatsapp_link(bot_number, data['name'])
+    image_url = data['image']
+    if not image_url.startswith('http'):
+        # Construct public URL for local image (requires public host like ngrok)
+        # Check for a PUBLIC_URL env var, else fallback to request.host_url
+        base_url = os.getenv("PUBLIC_URL") or request.host_url.rstrip('/')
+        image_url = f"{base_url}/{image_url}"
 
     caption = (
         f"*{data['name']}*\n"
         f"{data['description']}\n\n"
-        f"🕒 *Time:* {data['time']}\n"
+        f"🕒 *Time:* {data['time']}"
     )
     
     client.messages.create(
         from_=bot_number,
         to=to_number,
         body=caption,
-        media_url=[data['image']]
+        media_url=[image_url]
     )
-    time.sleep(0.9)
+    time.sleep(1.2)
+
+# =========================================================
+# 🖼️ STATIC MEDIA SERVING
+# =========================================================
+@app.route('/activity/<path:filename>')
+def serve_activity_media(filename):
+    return send_from_directory('activity', filename)
 
 # =========================================================
 # 📩 WHATSAPP WEBHOOK
@@ -249,7 +261,7 @@ def whatsapp_reply():
         else:
             booked_activity = incoming_msg.replace("Book:", "").strip()
             confirmation_msg = (
-                f"✅ Confirming your reservation for *{booked_activity}* today.\n"
+                f"✅ Confirming your reservation for *{booked_activity}*.\n"
                 "We have notified the concierge, and you will receive a confirmation shortly. 🛎️"
             )
         client.messages.create(from_=bot_number, to=user_number, body=confirmation_msg)
