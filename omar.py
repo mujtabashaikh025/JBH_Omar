@@ -250,7 +250,7 @@ def whatsapp_reply():
         else:
             booked_activity = incoming_msg.replace("Book:", "").strip()
             confirmation_msg = (
-                f"✅ Confirming your reservation for *{booked_activity}*.\n"
+                f"✅ Confirming your reservation for *{booked_activity}* today.\n"
                 "We have notified the concierge, and you will receive a confirmation shortly. 🛎️"
             )
         client.messages.create(from_=bot_number, to=user_number, body=confirmation_msg)
