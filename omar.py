@@ -218,7 +218,7 @@ def send_card(to_number, bot_number, activity_key):
         f"*{data['name']}*\n"
         f"{data['description']}\n\n"
         f"🕒 *Time:* {data['time']}\n"
-        f"🔗 *Book Now:* {booking_link}"
+        # f"🔗 *Book Now:* {booking_link}"
     )
     
     client.messages.create(
