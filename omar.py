@@ -99,7 +99,7 @@ def get_chat_session(sender_id):
     if sender_id not in chat_sessions:
         # Using Gemini 1.5 Flash for speed on Render
         model = genai.GenerativeModel(
-            model_name="gemini-1.5-flash", 
+            model_name="gemini-2.5-pro", 
             system_instruction=SYSTEM_PROMPT
         )
         chat_sessions[sender_id] = model.start_chat(history=[])
