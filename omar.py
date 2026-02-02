@@ -29,8 +29,9 @@ if env_api_key:
 # Initialize Twilio Client
 client = Client(twilio_sid, twilio_token)
 
+
 # =========================================================
-# 🌟 LEISURE ACTIVITY DATA
+# 🌟 ACTIVITY DATA (With High-Quality Images)
 # =========================================================
 ACTIVITY_DATA = {
     "Kids Swimming & Water Play": {
@@ -62,6 +63,36 @@ ACTIVITY_DATA = {
         "image": "activity/parents_relaxation.jpg",
         "description": "A tranquil escape for parents to rejuvenate in our world-class spa.",
         "time": "11:00 AM to 7:00 PM"
+    },
+    "Family Indoor Games Zone": {
+        "name": "Family Indoor Games Zone",
+        "image": "activity/indoor_games.jpeg",
+        "description": "Enjoy quality family time with a variety of engaging indoor games.",
+        "time": "12:00 PM to 6:00 PM"
+    },
+    "Guided Family Meditation": {
+        "name": "Guided Family Meditation",
+        "image": "activity/meditation.jpeg",
+        "description": "A serene guided journey to cultivate peace and togetherness.",
+        "time": "5:00 PM to 6:00 PM"
+    },
+    "Healthy Family Cooking Demo": {
+        "name": "Healthy Family Cooking Demo",
+        "image": "activity/healthy_cooking.jpg",
+        "description": "Learn to prepare nutritious and delicious meals as a family.",
+        "time": "3:00 PM to 5:00 PM"
+    },
+    "Outdoor Family Sports": {
+        "name": "Outdoor Family Sports",
+        "image": "activity/Sports.jpeg",
+        "description": "Active outdoor fun for the whole family in our exquisite facilities.",
+        "time": "4:00 PM to 6:00 PM"
+    },
+    "Storytelling Evening": {
+        "name": "Storytelling Evening",
+        "image": "activity/story_telling.jpg",
+        "description": "Enchanting tales under the stars for our little dreamers.",
+        "time": "6:30 PM to 8:00 PM"
     }
 }  
 
