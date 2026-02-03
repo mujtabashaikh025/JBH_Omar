@@ -36,7 +36,7 @@ client = Client(twilio_sid, twilio_token)
 ACTIVITY_DATA = {
     "Kids Swimming & Water Play": {
         "name": "Kids Swimming & Water Play",
-        "image": "activity/kids_swimming.jpg",
+        "image": "activity/kids_swimming_pool.jpg",
         "description": "Engaging water activities and supervised play for our younger guests.",
         "time": "9:00 AM to 12:00 PM"
     },
