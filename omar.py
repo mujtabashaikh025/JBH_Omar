@@ -84,7 +84,7 @@ ACTIVITY_DATA = {
     },
     "Outdoor Family Sports": {
         "name": "Outdoor Family Sports",
-        "image": "activity/Sports.jpeg",
+        "image": "activity/sports.jpeg",
         "description": "Active outdoor fun for the whole family in our exquisite facilities.",
         "time": "4:00 PM to 6:00 PM"
     },
