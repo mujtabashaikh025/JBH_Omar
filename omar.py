@@ -8,27 +8,19 @@ from twilio.rest import Client
 import google.generativeai as genai
 from dotenv import load_dotenv
 
-# Import the doctor dictionary from your data.py file
-try:
-    from data import doctors
-except ImportError:
-    doctors = {}
-
 # --- 1. CONFIGURATION & SETUP ---
 load_dotenv()
 env_api_key = os.getenv("GEMINI_API_KEY")
 twilio_sid = os.getenv("TWILIO_ACCOUNT_SID")
 twilio_token = os.getenv("TWILIO_AUTH_TOKEN")
 
-# Initialize Flask with a pointer to your activity folder
-app = Flask(__name__, static_folder='activity')
+app = Flask(__name__)
 
 if env_api_key:
     genai.configure(api_key=env_api_key)
 
-# Initialize Twilio Client
+# Initialize Twilio REST Client
 client = Client(twilio_sid, twilio_token)
-
 
 # =========================================================
 # 🌟 ACTIVITY DATA (With High-Quality Images)
@@ -180,7 +172,7 @@ When would you prefer to commence?"
 ### PHASE 5: THE CONFIRMATION
 Once a valid time is set, confirm briefly. Use short sentences.
 - **Script:** "Confirmed.
-We have secured this moment for your family at [Time] today.
+We have secured this moment for your family at [Time].
 We remain at your disposal.
 Enjoy your time with us, Mr. Omar."
 
@@ -189,13 +181,12 @@ Upon the guest expressing gratitude (e.g., “Thank you”), respond with refine
 """
 
 # =========================================================
-# 🧠 CHAT SESSION MANAGEMENT
+# 🧠 SESSION STORAGE
 # =========================================================
 chat_sessions = {}
 
 def get_chat_session(sender_id):
     if sender_id not in chat_sessions:
-        # Using Gemini 1.5 Flash for speed on Render
         model = genai.GenerativeModel(
             model_name="gemini-2.5-pro", 
             system_instruction=SYSTEM_PROMPT
@@ -204,19 +195,42 @@ def get_chat_session(sender_id):
     return chat_sessions[sender_id]
 
 # =========================================================
-# 🔎 ACTIVITY & MEDIA HELPERS
+# 🔎 SCENARIO & LINK HELPERS
 # =========================================================
+def detect_scenario(text):
+    # This function is now simplified to detect if any activity is mentioned to trigger cards
+    text = text.lower().replace("and", "&")
+    for activity_key in ACTIVITY_DATA:
+        if activity_key.lower().replace("and", "&") in text:
+            return "ACTIVITY_MENTIONED"
+    return None
+
 def get_mentioned_activities(text):
     text = text.lower().replace("and", "&")
-    return [key for key in ACTIVITY_DATA if key.lower().replace("and", "&") in text]
+    mentioned = []
+    for activity_key in ACTIVITY_DATA:
+        if activity_key.lower().replace("and", "&") in text:
+            mentioned.append(activity_key)
+    return mentioned
+
+def generate_whatsapp_link(bot_number, activity_name):
+    clean_number = bot_number.replace("whatsapp:", "")
+    text_payload = f"Book: {activity_name}"
+    encoded_text = urllib.parse.quote(text_payload)
+    return f"https://wa.me/{clean_number}?text={encoded_text}"
 
 def send_card(to_number, bot_number, activity_key):
     data = ACTIVITY_DATA.get(activity_key)
-    if not data: return
+    if not data: 
+        print(f"Warning: Key '{activity_key}' not found.")
+        return
 
-    # Detect the public host URL (important for Render deployment)
-    base_url = request.host_url.rstrip('/')
-    image_url = f"{base_url}/{data['image']}"
+    image_url = data['image']
+    if not image_url.startswith('http'):
+        # Construct public URL for local image (requires public host like ngrok)
+        # Check for a PUBLIC_URL env var, else fallback to request.host_url
+        base_url = os.getenv("PUBLIC_URL") or request.host_url.rstrip('/')
+        image_url = f"{base_url}/{image_url}"
 
     caption = (
         f"*{data['name']}*\n"
@@ -230,17 +244,18 @@ def send_card(to_number, bot_number, activity_key):
         body=caption,
         media_url=[image_url]
     )
-    time.sleep(1.0)
+    time.sleep(1.2)
 
 # =========================================================
-# 📩 ROUTES
+# 🖼️ STATIC MEDIA SERVING
 # =========================================================
-
-# Route to serve images from the /activity folder
 @app.route('/activity/<path:filename>')
 def serve_activity_media(filename):
     return send_from_directory('activity', filename)
 
+# =========================================================
+# 📩 WHATSAPP WEBHOOK
+# =========================================================
 @app.route("/whatsapp", methods=['POST'])
 def whatsapp_reply():
     incoming_msg = request.values.get('Body', '').strip()
@@ -249,35 +264,46 @@ def whatsapp_reply():
     
     resp = MessagingResponse()
 
-    # Interceptor for Booking actions
-    if incoming_msg.startswith("Book:"):
-        booked_item = incoming_msg.replace("Book:", "").strip()
-        confirmation = f"✅ I have noted your preference for {booked_item}.\nOur team will confirm your reservation momentarily."
-        client.messages.create(from_=bot_number, to=user_number, body=confirmation)
+    if not env_api_key or not twilio_sid:
         return str(resp)
 
+    # 🚀 INTERCEPTOR: HANDLE "BOOK NOW" CLICKS
+    if incoming_msg.startswith("Book:") or incoming_msg.lower() == "book now":
+        if incoming_msg.lower() == "book now":
+            confirmation_msg = "Booking confirmed"
+        else:
+            booked_activity = incoming_msg.replace("Book:", "").strip()
+            confirmation_msg = (
+                f"✅ Confirming your reservation for *{booked_activity}*.\n"
+                "We have notified the concierge, and you will receive a confirmation shortly. 🛎️"
+            )
+        client.messages.create(from_=bot_number, to=user_number, body=confirmation_msg)
+        return str(resp)
+
+    # 🤖 NORMAL AI FLOW
     try:
         session = get_chat_session(user_number)
         response = session.send_message(incoming_msg)
         bot_reply = response.text
         
-        # Split sentences for a natural typing feel on WhatsApp
+        scenario = detect_scenario(bot_reply)
+
         sentences = [s.strip() for s in bot_reply.split('\n') if s.strip()]
         for sentence in sentences:
             client.messages.create(from_=bot_number, to=user_number, body=sentence)
-            time.sleep(0.8) 
+            time.sleep(0.9) 
 
-        # Branching logic: If Gemini mentions an activity, send the image card
+        # --- LOGIC BRANCHING ---
         mentioned = get_mentioned_activities(bot_reply)
         for key in mentioned:
             send_card(user_number, bot_number, key)
 
     except Exception as e:
-        print(f"Error occurred: {e}")
+        print(f"Error: {e}")
         client.messages.create(
-            from_=bot_number, 
-            to=user_number, 
-            body="My deepest apologies, I am experiencing a brief technical interruption."
+            from_=bot_number,
+            to=user_number,
+            body="My apologies, I am momentarily unable to assist."
         )
 
     return str(resp)
