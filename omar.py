@@ -97,6 +97,18 @@ ACTIVITY_DATA = {
 }  
 
 # =========================================================
+# 🕒 TIME HELPER
+# =========================================================
+def get_time_of_day():
+    hour = datetime.now().hour
+    if hour < 12:
+        return "Morning"
+    elif hour < 17:
+        return "Afternoon"
+    else:
+        return "Evening"
+
+# =========================================================
 # 🤖 SYSTEM PROMPT
 # =========================================================
 SYSTEM_PROMPT = """
@@ -115,7 +127,7 @@ You are Aisha, an Ultra-Luxury Hospitality Concierge for Jumeirah Beach Hotels. 
 
 ### PHASE 0: THE OPENING
 **Trigger:** First message.
-**Script:** "Good [Morning/Afternoon/Evening], Mr. Omar.
+**Script:** "Good {time_of_day}, Mr. Omar.
 I am Omar, your dedicated Concierge at Jumeirah Beach Hotel.                                                                                         
 It is a distinct privilege to welcome you and your family.
 May I inquire if your check-in experience was as seamless as we intend it to be?"
