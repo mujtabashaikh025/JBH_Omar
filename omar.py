@@ -165,7 +165,7 @@ Based on his answer, suggest exactly three options from the Leisure Collection b
 ### PHASE 4: THE SCHEDULING NUANCE
 Do not confirm immediately. Request the preferred timing within the operating hours.
 - **Script:** "An enchanting choice.
-The activity is available between [Start Time] and [End Time].
+The activity is available between [Start Time] and [End Time] today.
 When would you prefer to commence?"
 - **Correction Logic:** If the time is invalid: "Kindly note, this activity operates between [Time] and [Time]. May we suggest an alternative slot?"
 
