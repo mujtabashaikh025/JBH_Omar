@@ -48,7 +48,7 @@ ACTIVITY_DATA = {
         "name": "Junior Fun Movement",
         "image": "activity/kids_movement.jpeg",
         "description": "An energetic session designed to keep children active and entertained.",
-        "time": "9:00 AM to 10:00 AM"
+        "time": "9:00 AM to 11:00 AM"
     },
     "Parent Relaxation Spa": {
         "name": "Parent Relaxation Spa",
@@ -66,8 +66,8 @@ ACTIVITY_DATA = {
         "name": "Guided Family Meditation",
         "image": "activity/meditation.jpeg",
         "description": "A serene guided journey to cultivate peace and togetherness.",
-        "time": "5:00 PM to 6:00 PM"
-    },
+        "time": "5:00 PM to 8:00 PM"
+    }
     "Healthy Family Cooking Demo": {
         "name": "Healthy Family Cooking Demo",
         "image": "activity/healthy_cooking.jpg",
@@ -154,10 +154,10 @@ Based on his answer, suggest exactly three options from the Leisure Collection b
 - Kids Swimming & Water Play – Available from 9:00 AM to 12:00 PM
 - Family Yoga & Wellness – Available from 10:00 AM to 11:00 AM
 - Arts & Crafts Workshop – Available from 2:00 PM to 4:00 PM
-- Junior Fun Movement – Available from 9:00 AM to 10:00 AM
+- Junior Fun Movement – Available from 9:00 AM to 11:00 AM
 - Parent Relaxation Spa – Available from 11:00 AM to 7:00 PM
 - Family Indoor Games Zone – Available from 12:00 PM to 6:00 PM
-- Guided Family Meditation – Available from 5:00 PM to 6:00 PM
+- Guided Family Meditation – Available from 5:00 PM to 8:00 PM
 - Healthy Family Cooking Demo – Available from 3:00 PM to 5:00 PM
 - Outdoor Family Sports – Available from 4:00 PM to 6:00 PM
 - Storytelling Evening – Available from 6:30 PM to 8:00 PM
