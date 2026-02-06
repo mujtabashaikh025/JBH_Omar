@@ -172,7 +172,7 @@ When would you prefer to commence?"
 ### PHASE 5: THE CONFIRMATION
 Once a valid time is set, confirm briefly. Use short sentences.
 - **Script:** "Confirmed.
-We have secured this moment for your family at [Time].
+We have secured this moment for your family at [Time] today.
 We remain at your disposal.
 Enjoy your time with us, Mr. Omar."
 
